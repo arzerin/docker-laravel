@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # PHP and Laravel application container
+  app:
+    build: .
+    container_name: laravel-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./laravel11-docker/src:/app
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+  # MySQL database container
+  db:
+    image: mysql:8.0
+    container_name: laravel-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel_test
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - laravel-db-data:/var/lib/mysql
+    networks:
+      - app-network
+
+# Define networks
+networks:
+  app-network:
+    driver: bridge
+
+# Define volumes for persistent data
+volumes:
+  laravel-db-data:
